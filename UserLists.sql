@@ -16,6 +16,29 @@ MangaID int NOT NULL,
 PRIMARY KEY (MangaID)
 );
 
+DROP PROCEDURE IF EXISTS AddToWatchList;
+DELIMITER $$
+CREATE PROCEDURE AddToWatchList(
+	In anime_id Int,
+  user_id Int
+)
+
+BEGIN
+	  INSERT INTO UserWatchList (UserID, AnimeID) VALUES (user_id, anime_id);
+END
+
+DROP PROCEDURE IF EXISTS DeleteFromWatchList;
+CREATE PROCEDURE DeleteFromWatchList(
+	In anime_id Int,
+  user_id Int
+)
+
+BEGIN
+	  DELETE FROM UserWatchList 
+    WHERE AnimeID = anime_id AND UserID = user_id;
+END
+DELIMITER ;
+
 INSERT INTO UserWatchList (UserID, AnimeID) VALUES 
 (1, 2),
 (2,10);
