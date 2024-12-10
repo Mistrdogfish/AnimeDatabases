@@ -66,7 +66,7 @@ BEGIN
     SELECT COUNT(*), SUM(AnimeStarRating) 
     INTO total_reviews, total_rating
     FROM AnimeReviews
-    WHERE AnimeMatchID = p_AnimeID;
+    WHERE AnimeMatchID = New.AnimeMatchID;
 
     -- If there's no entry for this AnimeID, initialize the values
     IF total_reviews IS NULL THEN
@@ -78,11 +78,11 @@ BEGIN
     SET average_rating = IF(total_reviews > 0, total_rating / total_reviews, 0);
 
     -- Update or insert the summary into the AnimeReviewSummary table
-    INSERT INTO AnimeReviewSummary (AnimeID, TotalReviews, AverageReview)
+    INSERT INTO AnimeReviewSummary (AnimeID, TotalReviews, AverageRating)
     VALUES (NEW.AnimeMatchID, total_reviews, average_rating)
     ON DUPLICATE KEY UPDATE
         TotalReviews = total_reviews,
-        AverageReview = average_rating;
+        AverageRating = average_rating;
 END $$    
 DELIMITER ;
 
@@ -124,10 +124,10 @@ BEGIN
     WHERE MangaMatchID = NEW.MangaMatchID;
 
     -- Step 3: Update the MangaReviewStats table with the new values
-    UPDATE MangaReviewStats
+    UPDATE MangaReviewsSummary
     SET TotalReviews = totalReviews,
         AverageRating = avgRating
-    WHERE MangaID = NEW.MangaMatchID;
+    WHERE MangaMatchID = NEW.MangaMatchID;
 END $$
 DELIMITER ;
 
@@ -313,10 +313,10 @@ DROP TABLE IF EXISTS MangaReviews;
 CREATE TABLE MangaReviews(MangaMatchID int, MangaReviewerID int, MangaReviewBody VARCHAR(100), MangaStarRating int, MangaReviewLikeCount int);
 
 DROP TABLE IF EXISTS AnimeReviewSummary;
-CREATE TABLE AnimeReviewSummary(AnimeID int, TotalReviews int, AverageReview int);
+CREATE TABLE AnimeReviewSummary(AnimeID int, TotalReviews int, AverageRating int);
 
-DROP TABLE IF EXISTS MangaReviewStats;
-CREATE TABLE MangaReviewStats(MangaID int, TotalReviews int, AverageRating int);
+DROP TABLE IF EXISTS MangaReviewSummary;
+CREATE TABLE MangaReviewSummary(MangaID int, TotalReviews int, AverageRating int);
 
 DROP TABLE IF EXISTS Users; 
 CREATE TABLE Users(FirstName varchar(20), LastName varchar(20),UserID int, FriendID int, AnimeReviewerID int, MangaReviewerID int, PRIMARY KEY (UserID));
@@ -396,7 +396,7 @@ Call AddNewAnimeReview(1, 127, 'The action scenes are awesome, and I love the ch
 Call AddNewAnimeReview(2, 128, 'A solid movie, but I wish it explored more of the characters’ backgrounds.', 4, 50);
 Call AddNewAnimeReview(3, 129, 'An incredibly well-crafted story, with visuals that take your breath away.', 5, 220);
 Call AddNewAnimeReview(3, 130, 'Spirited Away is a film that every anime lover should experience at least once.', 5, 210);
-Call AddNewAnimeReview(4, 131, 'The story of body-switching is both charming and thought-provoking. Beautiful film!', 5, 170);
+Call AddNewAnimeReview(4, 131, "The story of body-switching is both charming and thought-provoking. Beautiful film!", 5, 170);
 
 Call AddNewMangaReview(1, 1, 'A great start to an adventure. Highly recommend!', 5, 10);
 Call AddNewMangaReview(1, 2, 'Amazing characters and world-building.', 4, 8);
