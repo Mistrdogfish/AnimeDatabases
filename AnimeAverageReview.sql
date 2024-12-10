@@ -44,7 +44,7 @@ END $$
 
 DELIMITER ;
 
-CALL AddNewAnimeReview(1, 101, 'Great show with lots of action and emotional moments!', 5, 150);
+CALL AddNewAnimeReview(1, 2, 'Great show with lots of action and emotional moments!', 5, 150);
 
 SELECT * FROM AnimeReviews;
 

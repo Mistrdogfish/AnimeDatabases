@@ -54,5 +54,3 @@ GROUP BY
 	m.MangaID, m.Title
 HAVING
     count(r.MangaReviewBody) > 0;
-    
-
