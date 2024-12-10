@@ -12,10 +12,16 @@ CREATE PROCEDURE AddMangaReview(
 )
 BEGIN
     -- Step 1: Insert the new review into the MangaReviews table
-    INSERT INTO MangaReviews (MangaMatchID, MangaReviewerID, MangaReviewBody, MangaReviewLikeCount)
-    VALUES (p_MangaMatchID, p_MangaReviewerID, p_MangaReviewBody, p_MangaReviewLikeCount);
+    INSERT INTO MangaReviews (MangaMatchID, MangaReviewerID, MangaReviewBody, MangaReviewLikeCount, MangaStarRating)
+    VALUES (p_MangaMatchID, p_MangaReviewerID, p_MangaReviewBody, p_MangaReviewLikeCount, p_MangaStarRating);
 
 END $$
+
+DROP TRIGGER IF EXISTS updateSummary;
+CREATE TRIGGER updateSummary
+AFTER INSERT ON MangaReviews
+FOR EACH ROW
+BEGIN
     -- Step 2: Calculate the total number of reviews and average rating for the manga
     DECLARE totalReviews INT;
     DECLARE avgRating DECIMAL(3, 2);
@@ -23,19 +29,19 @@ END $$
     -- Get the total number of reviews for the manga
     SELECT COUNT(*) INTO totalReviews
     FROM MangaReviews
-    WHERE MangaMatchID = p_MangaMatchID;
+    WHERE MangaMatchID = NEW.MangaMatchID;
 
     -- Get the average rating for the manga
     SELECT AVG(MangaStarRating) INTO avgRating
     FROM MangaReviews
-    WHERE MangaMatchID = p_MangaMatchID;
+    WHERE MangaMatchID = NEW.MangaMatchID;
 
     -- Step 3: Update the MangaReviewStats table with the new values
     UPDATE MangaReviewStats
     SET TotalReviews = totalReviews,
         AverageRating = avgRating
-    WHERE MangaID = p_MangaMatchID;
-
+    WHERE MangaID = NEW.MangaMatchID;
+END
 DELIMITER ;
 
 CALL AddMangaReview(3, 1, 'Great manga! Very exciting and full of twists.', 10, 5);
