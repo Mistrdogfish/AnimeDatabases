@@ -8,6 +8,14 @@ BEGIN
     WHERE AnimeMatchID = anime_Id AND AnimeReviewerID = anime_reviewerid ;
 END 
 
+CREATE TRIGGER updateSummary
+AFTER DELETE ON AnimeReview
+BEGIN
+	UPDATE AnimeReviewSummary 
+    SET TotalReviews = TotalReviews - 1,
+	AverageReview = IF(TotalReviews > 0, (SELECT SUM(AnimeStarRating) FROM AnimeReviews WHERE AnimeID = OLD.AnimeID) / Total_Reviews, 0)
+    WHERE AnimeID = OLD.AnimeID;
+END
 
   DELIMITER ;
 
