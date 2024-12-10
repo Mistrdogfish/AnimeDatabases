@@ -2,6 +2,7 @@ use AnimeDatabase;
 
 DELIMITER $$
 
+DROP PROCEDURE IF EXISTS AddNewAnimeReview;
 CREATE PROCEDURE AddNewAnimeReview(
     IN p_AnimeID INT,
     IN p_AnimeReviewerID INT,
