@@ -17,8 +17,10 @@ BEGIN
 
 END $$
 
-CREATE TRIGGER updateSummmary
+DROP TRIGGER IF EXISTS updateSummary;
+CREATE TRIGGER updateSummary
 AFTER INSERT ON AnimeReviews
+FOR EACH ROW
 BEGIN
     -- Declare variables to hold total reviews and sum of ratings
     DECLARE total_reviews INT;
