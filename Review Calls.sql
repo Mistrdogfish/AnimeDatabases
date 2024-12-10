@@ -12,6 +12,7 @@ BEGIN
     WHERE AnimeMatchID = anime_Id AND AnimeReviewerID = anime_reviewerid ;
 END
 
+DROP TRIGGER IF EXISTS updateSummary;
 CREATE TRIGGER updateSummary
 AFTER DELETE ON AnimeReview
 BEGIN
@@ -21,8 +22,28 @@ BEGIN
     WHERE AnimeID = OLD.AnimeID;
 END
 	
-DELIMITER ;
+DROP PROCEDURE IF EXISTS DeleteMangaReview;
+CREATE PROCEDURE DeleteMangaReview(
+	In manga_id Int,
+    In manga_reviewerid INT
+)
 
+BEGIN
+	DELETE FROM MangaReviews
+    WHERE MangaMatchID = manga_Id AND MangaReviewerID = manga_reviewerid ;
+END
+
+DROP TRIGGER IF EXISTS updateSummary;
+CREATE TRIGGER updateSummary
+AFTER DELETE ON MangaReview
+BEGIN
+	UPDATE MangaReviewSummary 
+    SET TotalReviews = TotalReviews - 1,
+		AverageReview = IF(TotalReviews > 0, (SELECT SUM(MangaStarRating) FROM MangaReviews WHERE MangaID = OLD.MangaID) / Total_Reviews, 0)
+    WHERE MangaID = OLD.MangaID;
+END
+	
+DELIMITER ;
 #See a singular user's reviews
 CALL ListUserAnimeReview(1);
 CALL ListUserAnimeReview(2);
