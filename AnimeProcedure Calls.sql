@@ -1,6 +1,7 @@
 use AnimeDatabase;
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS AddNewAnime;
 CREATE PROCEDURE AddNewAnime(
     IN p_AnimeID INT,
     IN p_Title VARCHAR(100),
@@ -34,6 +35,7 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS AddNewManga;
 CREATE PROCEDURE AddNewManga(
     IN p_MangaID INT,
     IN p_Title VARCHAR(100),
@@ -54,6 +56,7 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS DeleteManga;
 CREATE PROCEDURE DeleteManga(
     IN p_MangaID INT
 )
