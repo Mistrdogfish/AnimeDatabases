@@ -1,10 +1,11 @@
-SELECT * FROM UserWatchList
-JOIN Users
-JOIN Anime
-ON UserWatchList.AnimeID = Anime.AnimeID AND UserWatchList.UserID = Users.UserID;
+USE AnimeDatabase; 
+CALL AddToWatchList(1, 1);
+CALL AddToWatchList(1, 2);
+CALL AddToWatchList(4, 5);
 
+CALL GetWatchList(1);
+CALL GetWatchList(2);
+CALL GetWatchList(4);
 
-SELECT * FROM UserReadList
-JOIN Users
-JOIN Manga
-ON UserReadList.MangaID = Manga.MangaID AND UserReadList.UserID = Users.UserID;
+CALL DeleteFromWatchList(1, 1);
+CALL DeleteFromWatchList(4,5);
