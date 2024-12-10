@@ -15,6 +15,10 @@ BEGIN
     VALUES (p_AnimeID, p_AnimeReviewerID, p_AnimeReviewBody, p_AnimeStarRating, p_AnimeReviewLikeCount);
 
 END $$
+
+CREATE TRIGGER updateSummmary
+AFTER INSERT ON AnimeReviews
+BEGIN
     -- Declare variables to hold total reviews and sum of ratings
     DECLARE total_reviews INT;
     DECLARE total_rating INT;
@@ -37,11 +41,12 @@ END $$
 
     -- Update or insert the summary into the AnimeReviewSummary table
     INSERT INTO AnimeReviewSummary (AnimeID, TotalReviews, AverageReview)
-    VALUES (p_AnimeID, total_reviews, average_rating)
+    VALUES (NEW.AnimeMatchID, total_reviews, average_rating)
     ON DUPLICATE KEY UPDATE
         TotalReviews = total_reviews,
         AverageReview = average_rating;
-
+END
+    
 DELIMITER ;
 
 CALL AddNewAnimeReview(1, 2, 'Great show with lots of action and emotional moments!', 5, 150);
