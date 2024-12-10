@@ -23,10 +23,22 @@ CREATE PROCEDURE AddToWatchList(
   user_id Int
 )
 
+
 BEGIN
 	  INSERT INTO UserWatchList (UserID, AnimeID) VALUES (user_id, anime_id);
 END
 
+DROP PROCEDURE IF EXISTS AddToReadList;
+CREATE PROCEDURE AddToReadList(
+	In manga_id Int,
+  user_id Int
+)
+
+
+BEGIN
+	  INSERT INTO UserWatchList (UserID, MangaID) VALUES (user_id, manga_id);
+END
+	
 DROP PROCEDURE IF EXISTS DeleteFromWatchList;
 CREATE PROCEDURE DeleteFromWatchList(
 	In anime_id Int,
@@ -36,6 +48,24 @@ CREATE PROCEDURE DeleteFromWatchList(
 BEGIN
 	  DELETE FROM UserWatchList 
     WHERE AnimeID = anime_id AND UserID = user_id;
+END
+
+DROP PROCEDURE IF EXISTS DeleteFromReadList;
+CREATE PROCEDURE DeleteFromWatchList(
+	In manga_id Int,
+  user_id Int
+)
+
+BEGIN
+	  DELETE FROM UserReadhList 
+    WHERE MangaID = manga_id AND UserID = user_id;
+END
+
+DROP PROCEDURE IF EXISTS  ViewFriendsLists;
+CREATE PROCEDURE ViewFriendsLists(In friend_id Int)
+
+BEGIN
+	  SELECT * FROM UserWatchList JOIN UserReadList ON USerWatchList.UserID = UserReadList.UserID WHERE UserID = friend_id;
 END
 DELIMITER ;
 
