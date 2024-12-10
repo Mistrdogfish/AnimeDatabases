@@ -2,6 +2,7 @@ use AnimeDatabase;
 
 DELIMITER $$
 
+DROP PROCEDURE IF EXISTS AddMangaReview;
 CREATE PROCEDURE AddMangaReview(
     IN p_MangaMatchID INT,
     IN p_MangaReviewerID INT,
